@@ -63,11 +63,32 @@ def create_firmware_entry(
     # HIER: Custom Firmware Name
     firmware_name = "Mesh Hessen Firmware" 
     
+    # Einfache Release Notes generieren
+    release_notes = f"""
+    # {firmware_name} {display_version}
+
+    **Build-Datum:** {build_date.split('T')[0]}  
+    **Hardware:** {display_name}  
+    **Basis:** Meshtastic Firmware mit angepasster Konfiguration
+    
+    ## Features
+    - Optimiert für das Mesh Hessen Netzwerk
+    - Angepasste Standard-Einstellungen
+    - Automatische Updates über Web Flasher
+    
+    ## Installation
+    Verwende den "Update" Button für bestehende Installationen oder "Clean Install" für neue Geräte.
+    
+    [Mehr Infos](https://meshhessen.de/firmware)
+    """
+     
+
     entry = {
         "id": version,
         "title": f"{firmware_name} für {display_name}",  
         "page_url": release_url,
         "created_at": build_date,
+        "release_notes": release_notes,
         "bin_urls": {}
     }
     
