@@ -13,20 +13,25 @@ from typing import Dict, List, Any
 def create_display_version(short_version: str, prefix: str) -> str:
     """Create a nice display version from short version"""
     
-    # Wenn es ein dev-hash ist, schöner formatieren
+    # Wenn short_version bereits eine echte Meshtastic Version enthält
+    # z.B. "2.7.12-mh-abc123" -> "2.7.12-MH"
+    version_match = re.match(r'^(\d+\.\d+\.\d+)', short_version)
+    if version_match:
+        base_version = version_match.group(1)  # "2.7.12"
+        if prefix:
+            return f"{base_version}-{prefix}"  # "2.7.12-MH"
+        return base_version
+    
+    # Fallback für andere Formate
     if short_version.startswith('dev-'):
-        hash_part = short_version[4:]  # Remove 'dev-'
-        if len(hash_part) >= 7:
-            hash_part = hash_part[:7]  # Nur erste 7 Zeichen
-        
-        base_version = "2.7.0"  # Basis-Version
+        hash_part = short_version[4:][:7]
+        base_version = "2.7.12"  # Fallback
         display_version = f"{base_version}-dev-{hash_part}"
     else:
         display_version = short_version
     
-    # Prefix hinzufügen wenn gewünscht
     if prefix:
-        display_version = f"{prefix}-{display_version}"
+        display_version = f"{display_version}-{prefix}"
     
     return display_version
 
