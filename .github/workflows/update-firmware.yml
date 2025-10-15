@@ -47,8 +47,11 @@ jobs:
             SHORT_VERSION="${{ github.event.client_payload.short_version }}"
             BUILD_DATE="${{ github.event.client_payload.build_date }}"
             DOWNLOAD_BASE_URL="${{ github.event.client_payload.download_base_url }}"
-            BOARDS="${{ github.event.client_payload.boards }}"
             RELEASE_URL="${{ github.event.client_payload.release_url }}"
+            
+            # KORRIGIERT: Boards Array richtig extrahieren
+            BOARDS_JSON='${{ toJson(github.event.client_payload.boards) }}'
+            BOARDS=$(echo "$BOARDS_JSON" | jq -r '.[]' | tr '\n' ' ' | sed 's/ $//')
           else
             VERSION="${{ github.event.inputs.version }}"
             SHORT_VERSION="$VERSION"
@@ -65,10 +68,17 @@ jobs:
           echo "boards=$BOARDS" >> $GITHUB_OUTPUT
           echo "release_url=$RELEASE_URL" >> $GITHUB_OUTPUT
           
-          echo "=== Event Data ==="
+          echo "=== Event Data Debug ==="
+          echo "Event: ${{ github.event_name }}"
           echo "Version: $VERSION"
-          echo "Boards: $BOARDS"
+          echo "Boards: '$BOARDS'"
           echo "Download URL: $DOWNLOAD_BASE_URL"
+          
+          # Boards einzeln auflisten
+          echo "Individual boards:"
+          for board in $BOARDS; do
+            echo "  - '$board'"
+          done
 
       - name: Download and organize firmware files
         env:
