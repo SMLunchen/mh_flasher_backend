@@ -26,7 +26,7 @@ def get_board_to_hardware_mapping() -> Dict[str, str]:
     """Mapping from PlatformIO board names to hardware slugs"""
     return {
         "heltec-v3": "HELTEC_V3",
-        "heltec-wireless-tracker-V1-0": "HELTEC_TRACKER", 
+        "heltec-wireless-tracker-V1-0": "HELTEC_TRACKER",
         "tbeam": "TBEAM",
         "tlora-v2": "TLORA_V2",
         "tlora-v1": "TLORA_V1",
@@ -38,7 +38,7 @@ def get_hardware_display_names() -> Dict[str, str]:
     """Display names for hardware"""
     return {
         "HELTEC_V3": "Heltec V3",
-        "HELTEC_TRACKER": "Heltec Wireless Tracker",
+        "HELTEC_TRACKER": "Heltec Wireless Tracker V1.0",
         "TBEAM": "TTGO T-Beam", 
         "TLORA_V2": "TTGO LoRa V2",
         "TLORA_V1": "TTGO LoRa V1",
