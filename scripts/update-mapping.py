@@ -60,9 +60,12 @@ def create_firmware_entry(
     base_url = "https://flasher.schwarzes-seelenreich.de/backend"
     firmware_path = f"firmware/{board}/{version}"
     
+    # HIER: Custom Firmware Name
+    firmware_name = "Mesh Hessen Firmware" 
+    
     entry = {
         "id": version,
-        "title": f"Custom Firmware {short_version} für {display_name}",
+        "title": f"{firmware_name} für {display_name}",  
         "page_url": release_url,
         "created_at": build_date,
         "bin_urls": {}
