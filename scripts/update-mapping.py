@@ -6,26 +6,27 @@ Update device-firmware-mapping.json with new firmware version
 import json
 import os
 import argparse
+import re
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
 
-def create_display_version(short_version: str, prefix: str) -> str:
+def create_display_version(short_version: str, prefix: str, base_version: str = "2.7.12") -> str:
     """Create a nice display version from short version"""
     
     # Wenn short_version bereits eine echte Meshtastic Version enthält
     # z.B. "2.7.12-mh-abc123" -> "2.7.12-MH"
     version_match = re.match(r'^(\d+\.\d+\.\d+)', short_version)
     if version_match:
-        base_version = version_match.group(1)  # "2.7.12"
+        detected_base = version_match.group(1)  # "2.7.12"
+        print(f"Detected base version from short_version: {detected_base}")
         if prefix:
-            return f"{base_version}-{prefix}"  # "2.7.12-MH"
-        return base_version
+            return f"{detected_base}-{prefix}"  # "2.7.12-MH"
+        return detected_base
     
-    # Fallback für andere Formate
+    # Fallback für dev-Versionen
     if short_version.startswith('dev-'):
         hash_part = short_version[4:][:7]
-        base_version = "2.7.12"  # Fallback
         display_version = f"{base_version}-dev-{hash_part}"
     else:
         display_version = short_version
@@ -145,6 +146,8 @@ def main():
     parser = argparse.ArgumentParser(description='Update firmware mapping')
     parser.add_argument('--version', required=True, help='Full version string')
     parser.add_argument('--short-version', required=True, help='Short version')
+    parser.add_argument('--base-version', required=False, help='Base Meshtastic version')
+    parser.add_argument('--display-version', required=False, help='Display version')
     parser.add_argument('--build-date', required=True, help='Build date (ISO format)')
     parser.add_argument('--boards', required=True, help='Space-separated board names')
     parser.add_argument('--release-url', required=True, help='Release URL')
@@ -159,10 +162,18 @@ def main():
     firmware_website = os.environ.get("FIRMWARE_WEBSITE", args.release_url)
     version_prefix = os.environ.get("VERSION_PREFIX", "")
     
-    # Display-Version erstellen
-    display_version = create_display_version(args.short_version, version_prefix)
+    # Display-Version bestimmen
+    if args.display_version:
+        display_version = args.display_version
+        print(f"Using provided display version: {display_version}")
+    else:
+        base_version = args.base_version if args.base_version else "2.7.12"
+        display_version = create_display_version(args.short_version, version_prefix, base_version)
+        print(f"Generated display version: {display_version}")
     
     print(f"Updating firmware mapping for version: {args.version}")
+    print(f"Short version: {args.short_version}")
+    print(f"Base version: {args.base_version}")
     print(f"Display version: {display_version}")
     print(f"Firmware name: {firmware_name}")
     print(f"Website: {firmware_website}")
@@ -203,7 +214,7 @@ def main():
             firmware_website,
             firmware_name,
             board,
-            board,  # Verwende board name für Pfade
+            board,
             display_name
         )
         
