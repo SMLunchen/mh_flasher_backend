@@ -1,6 +1,15 @@
 {
   "HELTEC_V3": [
     {
+      "id": "dev-d8d48e5-20251015-183708",
+      "title": "Mesh Hessen Firmware für Heltec V3",
+      "page_url": "https://github.com/SMLunchen/mh_firmware/releases/tag/firmware-dev-d8d48e5-20251015-183708",
+      "created_at": "2025-10-15T18:37:08Z",
+      "bin_urls": {
+        "update": "https://flasher.schwarzes-seelenreich.de/backend/firmware/heltec-v3/dev-d8d48e5-20251015-183708/firmware-heltec-v3-dev-d8d48e5-20251015-183708-update.bin"
+      }
+    },
+    {
       "id": "dev-a577ad4-20251015-152831",
       "title": "Custom Firmware dev-a577ad4-20251015-152831 für Heltec V3",
       "page_url": "https://github.com/SMLunchen/mh_firmware/releases/download/firmware-dev-a577ad4-20251015-152831/",
@@ -9,5 +18,6 @@
         "update": "https://flasher.schwarzes-seelenreich.de/backend/firmware/heltec-v3/dev-a577ad4-20251015-152831/firmware-heltec-v3-dev-a577ad4-20251015-152831-update.bin"
       }
     }
-  ]
+  ],
+  "HELTEC_TRACKER": []
 }
