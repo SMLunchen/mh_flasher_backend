@@ -10,6 +10,26 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
 
+def create_display_version(short_version: str, prefix: str) -> str:
+    """Create a nice display version from short version"""
+    
+    # Wenn es ein dev-hash ist, schöner formatieren
+    if short_version.startswith('dev-'):
+        hash_part = short_version[4:]  # Remove 'dev-'
+        if len(hash_part) >= 7:
+            hash_part = hash_part[:7]  # Nur erste 7 Zeichen
+        
+        base_version = "2.7.0"  # Basis-Version
+        display_version = f"{base_version}-dev-{hash_part}"
+    else:
+        display_version = short_version
+    
+    # Prefix hinzufügen wenn gewünscht
+    if prefix:
+        display_version = f"{prefix}-{display_version}"
+    
+    return display_version
+
 def load_mapping(file_path: str) -> Dict[str, List[Dict]]:
     """Load existing mapping or create empty one"""
     if os.path.exists(file_path):
@@ -49,8 +69,10 @@ def get_hardware_display_names() -> Dict[str, str]:
 def create_firmware_entry(
     version: str,
     short_version: str,
+    display_version: str,
     build_date: str,
-    release_url: str,
+    firmware_website: str,
+    firmware_name: str,
     board: str,
     hw_slug: str,
     display_name: str
@@ -60,33 +82,28 @@ def create_firmware_entry(
     base_url = "https://flasher.schwarzes-seelenreich.de/backend"
     firmware_path = f"firmware/{board}/{version}"
     
-    # HIER: Custom Firmware Name
-    firmware_name = "Mesh Hessen Firmware" 
-    
     # Einfache Release Notes generieren
-    release_notes = f"""
-    # {firmware_name} {display_version}
+    release_notes = f"""# {firmware_name} {display_version}
 
-    **Build-Datum:** {build_date.split('T')[0]}  
-    **Hardware:** {display_name}  
-    **Basis:** Meshtastic Firmware mit angepasster Konfiguration
-    
-    ## Features
-    - Optimiert für das Mesh Hessen Netzwerk
-    - Angepasste Standard-Einstellungen
-    - Automatische Updates über Web Flasher
-    
-    ## Installation
-    Verwende den "Update" Button für bestehende Installationen oder "Clean Install" für neue Geräte.
-    
-    [Mehr Infos](https://meshhessen.de/firmware)
-    """
-     
+**Build-Datum:** {build_date.split('T')[0]}  
+**Hardware:** {display_name}  
+**Basis:** Meshtastic Firmware mit angepasster Konfiguration
 
+## Features
+- Optimiert für das Mesh Hessen Netzwerk
+- Angepasste Standard-Einstellungen
+- Automatische Updates über Web Flasher
+
+## Installation
+Verwende den "Update" Button für bestehende Installationen oder "Clean Install" für neue Geräte.
+
+[Mehr Infos](https://meshhessen.de/firmware)
+"""
+    
     entry = {
         "id": version,
-        "title": f"{firmware_name} für {display_name}",  
-        "page_url": release_url,
+        "title": f"{firmware_name} {display_version} für {display_name}",
+        "page_url": firmware_website,
         "created_at": build_date,
         "release_notes": release_notes,
         "bin_urls": {}
@@ -131,7 +148,19 @@ def main():
     
     args = parser.parse_args()
     
+    # Umgebungsvariablen lesen
+    firmware_name = os.environ.get("FIRMWARE_NAME", "Custom Firmware")
+    firmware_org = os.environ.get("FIRMWARE_ORG", "")  
+    firmware_website = os.environ.get("FIRMWARE_WEBSITE", args.release_url)
+    version_prefix = os.environ.get("VERSION_PREFIX", "")
+    
+    # Display-Version erstellen
+    display_version = create_display_version(args.short_version, version_prefix)
+    
     print(f"Updating firmware mapping for version: {args.version}")
+    print(f"Display version: {display_version}")
+    print(f"Firmware name: {firmware_name}")
+    print(f"Website: {firmware_website}")
     
     # Lade bestehendes Mapping
     mapping = load_mapping(args.mapping_file)
@@ -163,9 +192,11 @@ def main():
         # Neue Firmware-Entry erstellen
         firmware_entry = create_firmware_entry(
             args.version,
-            args.short_version, 
+            args.short_version,
+            display_version,
             args.build_date,
-            args.release_url,
+            firmware_website,
+            firmware_name,
             board,
             board,  # Verwende board name für Pfade
             display_name
@@ -183,7 +214,7 @@ def main():
         mapping[hw_slug] = mapping[hw_slug][:args.max_versions]
         
         updated_devices.append(hw_slug)
-        print(f"  ✓ {hw_slug}: {len(firmware_entry['bin_urls'])} Dateien hinzugefügt")
+        print(f"  ✓ {hw_slug}: '{firmware_entry['title']}'")
     
     if updated_devices:
         # Mapping speichern
@@ -194,8 +225,9 @@ def main():
         print(f"\n=== Mapping Summary ===")
         for device in sorted(mapping.keys()):
             versions = len(mapping[device])
-            latest = mapping[device][0]["id"] if versions > 0 else "none"
-            print(f"  {device}: {versions} Versionen (latest: {latest})")
+            latest = mapping[device][0]["title"] if versions > 0 else "none"
+            print(f"  {device}: {versions} Versionen")
+            print(f"    Latest: {latest}")
     else:
         print("\n! Keine Geräte aktualisiert")
 
