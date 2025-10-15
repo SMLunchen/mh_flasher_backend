@@ -1,0 +1,238 @@
+name: Update Firmware from Build
+on:
+  repository_dispatch:
+    types: [firmware-built]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Firmware Version'
+        required: true
+        type: string
+      download_base_url:
+        description: 'GitHub Release Download Base URL'
+        required: true
+        type: string
+      boards:
+        description: 'Boards (space separated)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  update-firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Backend Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests
+
+      - name: Extract Event Data
+        id: event_data
+        run: |
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            VERSION="${{ github.event.client_payload.version }}"
+            SHORT_VERSION="${{ github.event.client_payload.short_version }}"
+            BUILD_DATE="${{ github.event.client_payload.build_date }}"
+            DOWNLOAD_BASE_URL="${{ github.event.client_payload.download_base_url }}"
+            BOARDS="${{ github.event.client_payload.boards }}"
+            RELEASE_URL="${{ github.event.client_payload.release_url }}"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+            SHORT_VERSION="$VERSION"
+            BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+            DOWNLOAD_BASE_URL="${{ github.event.inputs.download_base_url }}"
+            BOARDS="${{ github.event.inputs.boards }}"
+            RELEASE_URL="$DOWNLOAD_BASE_URL"
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "short_version=$SHORT_VERSION" >> $GITHUB_OUTPUT
+          echo "build_date=$BUILD_DATE" >> $GITHUB_OUTPUT
+          echo "download_base_url=$DOWNLOAD_BASE_URL" >> $GITHUB_OUTPUT
+          echo "boards=$BOARDS" >> $GITHUB_OUTPUT
+          echo "release_url=$RELEASE_URL" >> $GITHUB_OUTPUT
+          
+          echo "=== Event Data ==="
+          echo "Version: $VERSION"
+          echo "Boards: $BOARDS"
+          echo "Download URL: $DOWNLOAD_BASE_URL"
+
+      - name: Download and organize firmware files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          
+          VERSION="${{ steps.event_data.outputs.version }}"
+          DOWNLOAD_BASE_URL="${{ steps.event_data.outputs.download_base_url }}"
+          BOARDS="${{ steps.event_data.outputs.boards }}"
+          
+          echo "Downloading firmware files for version: $VERSION"
+          
+          # Board zu Hardware-Slug Mapping
+          declare -A board_to_slug=(
+            ["heltec-v3"]="heltec-v3"
+            ["heltec-wireless-tracker-V1-0"]="heltec-tracker"
+            ["tbeam"]="tbeam"
+            ["tlora-v2"]="tlora-v2"
+          )
+          
+          # Temp-Verzeichnis erstellen
+          mkdir -p temp-download
+          
+          for board in $BOARDS; do
+            echo "Processing board: $board"
+            
+            hw_slug="${board_to_slug[$board]:-$board}"
+            target_dir="firmware/$hw_slug/$VERSION"
+            mkdir -p "$target_dir"
+            
+            echo "Hardware-Slug: $hw_slug -> $target_dir"
+            
+            # Verschiedene Firmware-Varianten herunterladen
+            for variant in "" "-factory" "-update" "-ota"; do
+              for ext in bin uf2 hex; do
+                filename="firmware-${board}${variant}-${VERSION}.$ext"
+                download_url="${DOWNLOAD_BASE_URL}/${filename}"
+                target_file="${target_dir}/firmware-${hw_slug}${variant}-${VERSION}.$ext"
+                
+                echo "Versuche Download: $download_url"
+                
+                if curl -L -f -s \
+                  -H "Accept: application/octet-stream" \
+                  -o "$target_file" \
+                  "$download_url"; then
+                  echo "✓ Downloaded: $filename -> $target_file"
+                  
+                  # Zusätzliche Symlinks/Kopien für verschiedene Namenskonventionen
+                  if [ "$variant" = "" ]; then
+                    cp "$target_file" "${target_dir}/firmware-${hw_slug}-${VERSION}-update.$ext"
+                  fi
+                else
+                  echo "✗ Failed to download: $filename"
+                  rm -f "$target_file"
+                fi
+              done
+            done
+            
+            # Prüfen ob wenigstens eine Datei heruntergeladen wurde
+            if [ -z "$(ls -A "$target_dir" 2>/dev/null)" ]; then
+              echo "WARNUNG: Keine Dateien für Board $board heruntergeladen"
+              rmdir "$target_dir" 2>/dev/null || true
+            else
+              echo "✓ Board $board: $(ls -1 "$target_dir" | wc -l) Dateien"
+              ls -la "$target_dir"
+            fi
+          done
+          
+          echo "=== Download Summary ==="
+          find firmware -name "*.bin" -o -name "*.uf2" | sort
+
+      - name: Update device firmware mapping
+        run: |
+          python scripts/update-mapping.py \
+            --version "${{ steps.event_data.outputs.version }}" \
+            --short-version "${{ steps.event_data.outputs.short_version }}" \
+            --build-date "${{ steps.event_data.outputs.build_date }}" \
+            --boards "${{ steps.event_data.outputs.boards }}" \
+            --release-url "${{ steps.event_data.outputs.release_url }}"
+
+      - name: Validate firmware files and mapping
+        run: |
+          echo "=== Validating firmware files ==="
+          python scripts/validate-firmware.py
+          
+          echo "=== Validating mapping JSON ==="
+          python -c "
+          import json
+          with open('data/device-firmware-mapping.json') as f:
+              data = json.load(f)
+          print('Mapping validation: OK')
+          print(f'Devices: {list(data.keys())}')
+          for device, firmwares in data.items():
+              print(f'  {device}: {len(firmwares)} versions')
+          "
+
+      - name: Update Docker image version
+        run: |
+          VERSION="${{ steps.event_data.outputs.version }}"
+          BUILD_DATE="${{ steps.event_data.outputs.build_date }}"
+          
+          # Version in Docker-Label setzen
+          sed -i "s/LABEL version=.*/LABEL version=\"$VERSION\"/" Dockerfile
+          sed -i "s/LABEL build_date=.*/LABEL build_date=\"$BUILD_DATE\"/" Dockerfile
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "firmware-bot@github-actions"
+          git config --local user.name "Firmware Update Bot"
+          
+          git add .
+          
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen zum Committen"
+            exit 0
+          fi
+          
+          git commit -m "Auto-update firmware ${{ steps.event_data.outputs.version }}
+
+          - Version: ${{ steps.event_data.outputs.version }}
+          - Build-Date: ${{ steps.event_data.outputs.build_date }}
+          - Boards: ${{ steps.event_data.outputs.boards }}
+          - Source: ${{ steps.event_data.outputs.release_url }}
+          
+          Firmware files and mapping updated automatically."
+          
+          git push
+
+      - name: Trigger deployment (Optional)
+        if: ${{ vars.AUTO_DEPLOY == 'true' }}
+        run: |
+          # Webhook für Server-Deployment (falls gewünscht)
+          if [ -n "${{ secrets.DEPLOY_WEBHOOK_URL }}" ]; then
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer ${{ secrets.DEPLOY_TOKEN }}" \
+              "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
+              -d "{
+                \"action\": \"update-firmware\",
+                \"version\": \"${{ steps.event_data.outputs.version }}\",
+                \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+              }"
+          fi
+
+      - name: Create deployment summary
+        run: |
+          cat > $GITHUB_STEP_SUMMARY << EOF
+          # 🚀 Firmware Update Deployed
+          
+          **Version:** ${{ steps.event_data.outputs.version }}  
+          **Build Date:** ${{ steps.event_data.outputs.build_date }}  
+          **Boards Updated:** ${{ steps.event_data.outputs.boards }}
+          
+          ## 📦 Updated Files
+          \`\`\`
+          $(find firmware -name "*${{ steps.event_data.outputs.version }}*" | sort)
+          \`\`\`
+          
+          ## 🔗 Links
+          - [Source Release](${{ steps.event_data.outputs.release_url }})
+          - [Web Flasher](https://flasher.schwarzes-seelenreich.de)
+          
+          ## 📊 Repository Status
+          - Firmware files: $(find firmware -name "*.bin" | wc -l) total
+          - Hardware devices: $(jq 'keys | length' data/device-firmware-mapping.json) devices
+          EOF
