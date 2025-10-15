@@ -2,24 +2,16 @@ version: '3.8'
 
 services:
   firmware-server:
-    build: .
+    image: nginx:alpine
     container_name: firmware-server
-    restart: unless-stopped
     ports:
-      - "${FIRMWARE_PORT:-8080}:80"
+      - "8080:80"
     volumes:
       - ./firmware:/usr/share/nginx/html/firmware:ro
-      - ./html/data:ro
+      - ./data:/usr/share/nginx/html/data:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./logs:/var/log/nginx
-    environment:
-      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.firmware.rule=Host(`flasher.schwarzes-seelenreich.de`) && PathPrefix(`/backend`)"
-      - "traefik.http.routers.firmware.tls=true"
-      - "traefik.http.routers.firmware.tls.certresolver=letsencrypt"
+    restart: unless-stopped
 
 networks:
-  default:
-    name: firmware-network
+  firmware-network:
+    driver: bridge
