@@ -1,0 +1,19 @@
+{
+  "firmwares": [
+    {
+      "version": "2.7.0",
+      "device": "heltec",
+      "url": "/firmware/heltec-2.7.0.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "notes": "Standard Heltec firmware"
+    },
+    {
+      "version": "2.7.0",
+      "device": "ttgo",
+      "url": "/firmware/ttgo-2.7.0.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "notes": "TTGO T-Beam"
+    }
+  ]
+}
+
