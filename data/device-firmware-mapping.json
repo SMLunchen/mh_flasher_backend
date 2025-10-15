@@ -1,6 +1,16 @@
 {
   "HELTEC_V3": [
     {
+      "id": "firmware-dev-d8d48e5-20251015-183708-d8d48e5-20251015-200522",
+      "title": "Mesh Hessen Firmware MH-firmware-dev-d8d48e5-20251015-183708-d8d48e5 für Heltec V3",
+      "page_url": "https://meshhessen.de",
+      "created_at": "2025-10-15T20:05:22Z",
+      "release_notes": "# Mesh Hessen Firmware MH-firmware-dev-d8d48e5-20251015-183708-d8d48e5\n\n**Build-Datum:** 2025-10-15  \n**Hardware:** Heltec V3  \n**Basis:** Meshtastic Firmware mit angepasster Konfiguration\n\n## Features\n- Optimiert für das Mesh Hessen Netzwerk\n- Angepasste Standard-Einstellungen\n- Automatische Updates über Web Flasher\n\n## Installation\nVerwende den \"Update\" Button für bestehende Installationen oder \"Clean Install\" für neue Geräte.\n\n[Mehr Infos](https://meshhessen.de/firmware)\n",
+      "bin_urls": {
+        "update": "https://flasher.schwarzes-seelenreich.de/backend/firmware/heltec-v3/firmware-dev-d8d48e5-20251015-183708-d8d48e5-20251015-200522/firmware-heltec-v3-firmware-dev-d8d48e5-20251015-183708-d8d48e5-20251015-200522-update.bin"
+      }
+    },
+    {
       "id": "dev-d8d48e5-20251015-183708",
       "title": "Mesh Hessen Firmware für Heltec V3",
       "page_url": "https://github.com/SMLunchen/mh_firmware/releases/tag/firmware-dev-d8d48e5-20251015-183708",
