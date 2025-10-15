@@ -141,7 +141,12 @@ jobs:
           echo "=== Download Summary ==="
           find firmware -name "*.bin" -o -name "*.uf2" | sort
 
-      - name: Update device firmware mapping
+      - name: Create/Update device firmware mapping
+        env:
+          FIRMWARE_NAME: "Mesh Hessen Firmware"
+          FIRMWARE_ORG: "Mesh Hessen"
+          FIRMWARE_WEBSITE: "https://meshhessen.de"
+          VERSION_PREFIX: "MH"
         run: |
           python scripts/update-mapping.py \
             --version "${{ steps.event_data.outputs.version }}" \
