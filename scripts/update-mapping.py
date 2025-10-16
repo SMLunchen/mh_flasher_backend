@@ -244,12 +244,22 @@ def main():
         print(f"\n✓ Mapping aktualisiert für: {', '.join(updated_devices)}")
         
         # Summary ausgeben
-        print(f"\n=== Mapping Summary ===")
+        print(f"=== Mapping Summary ===")
         for device in sorted(mapping.keys()):
             versions = len(mapping[device])
-            latest = mapping[device][0]["title"] if versions > 0 else "none"
-            print(f"  {device}: {versions} Versionen")
+            # Zeige nur die ersten 5 in der UI
+            display_versions = mapping[device][:5]
+            latest = display_versions[0]["title"] if display_versions else "none"
+            print(f"  {device}: {versions} total, showing {len(display_versions)}")
             print(f"    Latest: {latest}")
+            
+    #ALT - ALLES ausgeben
+        #print(f"\n=== Mapping Summary ===")
+        #for device in sorted(mapping.keys()):
+        #    versions = len(mapping[device])
+        #    latest = mapping[device][0]["title"] if versions > 0 else "none"
+        #    print(f"  {device}: {versions} Versionen")
+        #    print(f"    Latest: {latest}")
     else:
         print("\n! Keine Geräte aktualisiert")
 
