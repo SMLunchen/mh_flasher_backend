@@ -57,7 +57,10 @@ def get_board_to_hardware_mapping() -> Dict[str, str]:
         "tlora-v2": "TLORA_V2",
         "tlora-v1": "TLORA_V1",
         "tlora-v1_3": "TLORA_V1_3",
-        "techo": "TECHO"
+        "techo": "TECHO",
+        "heltec-v4": "HELTEC_V4",
+        "rak4631": "RAK4631",
+        "heltec-wireless-tracker": "HELTEC_WIRELESS_TRACKER"
     }
 
 def get_hardware_display_names() -> Dict[str, str]:
@@ -69,7 +72,10 @@ def get_hardware_display_names() -> Dict[str, str]:
         "TLORA_V2": "TTGO LoRa V2",
         "TLORA_V1": "TTGO LoRa V1",
         "TLORA_V1_3": "TTGO LoRa V1.3",
-        "TECHO": "T-Echo"
+        "TECHO": "T-Echo",
+        "HELTEC_V4:": "Heltec V4",
+        "RAK4631": "RAK WisBlock 4631",
+        "HELTEC_WIRELESS_TRACKER": "Heltec Wireless Tracker V1.1"
     }
 
 def create_firmware_entry(
