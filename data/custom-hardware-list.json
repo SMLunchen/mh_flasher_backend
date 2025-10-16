@@ -30,6 +30,71 @@
     ],
     "images": [],
     "partitionScheme": "8MB"
+  },
+  {
+    "hwModel": 48,
+    "hwModelSlug": "HELTEC_WIRELESS_TRACKER",
+    "platformioTarget": "heltec-wireless-tracker",
+    "architecture": "esp32-s3",
+    "activelySupported": true,
+    "supportLevel": 1,
+    "displayName": "Heltec Wireless Tracker V1.1",
+    "tags": [
+      "Heltec"
+    ],
+    "images": [
+      "heltec-wireless-tracker.svg"
+    ],
+    "requiresDfu": true,
+    "partitionScheme": "8MB"
+  },
+   {
+    "hwModel": 58,
+    "hwModelSlug": "HELTEC_WIRELESS_TRACKER_V1_0",
+    "platformioTarget": "heltec-wireless-tracker-V1-0",
+    "architecture": "esp32-s3",
+    "activelySupported": false,
+    "supportLevel": 3,
+    "displayName": "Heltec Wireless Tracker V1.0",
+    "images": [
+      "heltec-wireless-tracker.svg"
+    ],
+    "requiresDfu": true,
+    "partitionScheme": "8MB"
+  },
+  {
+    "hwModel": 9,
+    "hwModelSlug": "RAK4631",
+    "platformioTarget": "rak4631",
+    "architecture": "nrf52840",
+    "activelySupported": true,
+    "supportLevel": 1,
+    "displayName": "RAK WisBlock 4631",
+    "tags": [
+      "RAK"
+    ],
+    "images": [
+      "rak4631.svg",
+      "rak4631_case.svg"
+    ],
+    "requiresDfu": true
+  },
+    {
+    "hwModel": 110,
+    "hwModelSlug": "HELTEC_V4",
+    "platformioTarget": "heltec-v4",
+    "architecture": "esp32-s3",
+    "activelySupported": true,
+    "supportLevel": 1,
+    "displayName": "Heltec V4",
+    "tags": [
+      "Heltec"
+    ],
+    "requiresDfu": true,
+    "hasMui": false,
+    "partitionScheme": "16MB",
+    "images": [
+      "heltec_v4.svg"
+    ]
   }
-
 ]
