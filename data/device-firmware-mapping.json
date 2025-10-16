@@ -69,5 +69,42 @@
       }
     }
   ],
-  "HELTEC_TRACKER": []
+  "HELTEC_TRACKER": [],
+  "RAK4631": [
+    {
+      "id": "2.7.12.45f15b8-mh-fe2e2753a",
+      "title": "Mesh Hessen Firmware 2.7.12-MH für RAK WisBlock 4631",
+      "page_url": "https://meshhessen.de",
+      "created_at": "2025-10-16T08:03:40Z",
+      "release_notes": "# Mesh Hessen Firmware 2.7.12-MH\n\n**Build-Datum:** 2025-10-16  \n**Hardware:** RAK WisBlock 4631  \n**Basis:** Meshtastic Firmware mit angepasster Konfiguration\n\n## Features\n- Optimiert für das Mesh Hessen Netzwerk\n- Angepasste Standard-Einstellungen\n- Automatische Updates über Web Flasher\n\n## Installation\nVerwende den \"Update\" Button für bestehende Installationen oder \"Clean Install\" für neue Geräte.\n\n[Mehr Infos](https://meshhessen.de/firmware)\n",
+      "bin_urls": {
+        "uf2": "https://flasher.schwarzes-seelenreich.de/backend/firmware/rak4631/2.7.12.45f15b8-mh-fe2e2753a/firmware-rak4631-2.7.12.45f15b8-mh-fe2e2753a.uf2",
+        "hex": "https://flasher.schwarzes-seelenreich.de/backend/firmware/rak4631/2.7.12.45f15b8-mh-fe2e2753a/firmware-rak4631-2.7.12.45f15b8-mh-fe2e2753a.hex"
+      }
+    }
+  ],
+  "HELTEC_WIRELESS_TRACKER": [
+    {
+      "id": "2.7.12.45f15b8-mh-fe2e2753a",
+      "title": "Mesh Hessen Firmware 2.7.12-MH für Heltec Wireless Tracker V1.1",
+      "page_url": "https://meshhessen.de",
+      "created_at": "2025-10-16T08:03:40Z",
+      "release_notes": "# Mesh Hessen Firmware 2.7.12-MH\n\n**Build-Datum:** 2025-10-16  \n**Hardware:** Heltec Wireless Tracker V1.1  \n**Basis:** Meshtastic Firmware mit angepasster Konfiguration\n\n## Features\n- Optimiert für das Mesh Hessen Netzwerk\n- Angepasste Standard-Einstellungen\n- Automatische Updates über Web Flasher\n\n## Installation\nVerwende den \"Update\" Button für bestehende Installationen oder \"Clean Install\" für neue Geräte.\n\n[Mehr Infos](https://meshhessen.de/firmware)\n",
+      "bin_urls": {
+        "update": "https://flasher.schwarzes-seelenreich.de/backend/firmware/heltec-wireless-tracker/2.7.12.45f15b8-mh-fe2e2753a/firmware-heltec-wireless-tracker-2.7.12.45f15b8-mh-fe2e2753a-update.bin"
+      }
+    }
+  ],
+  "HELTEC_V4": [
+    {
+      "id": "2.7.12.45f15b8-mh-fe2e2753a",
+      "title": "Mesh Hessen Firmware 2.7.12-MH für HELTEC_V4",
+      "page_url": "https://meshhessen.de",
+      "created_at": "2025-10-16T08:03:40Z",
+      "release_notes": "# Mesh Hessen Firmware 2.7.12-MH\n\n**Build-Datum:** 2025-10-16  \n**Hardware:** HELTEC_V4  \n**Basis:** Meshtastic Firmware mit angepasster Konfiguration\n\n## Features\n- Optimiert für das Mesh Hessen Netzwerk\n- Angepasste Standard-Einstellungen\n- Automatische Updates über Web Flasher\n\n## Installation\nVerwende den \"Update\" Button für bestehende Installationen oder \"Clean Install\" für neue Geräte.\n\n[Mehr Infos](https://meshhessen.de/firmware)\n",
+      "bin_urls": {
+        "update": "https://flasher.schwarzes-seelenreich.de/backend/firmware/heltec-v4/2.7.12.45f15b8-mh-fe2e2753a/firmware-heltec-v4-2.7.12.45f15b8-mh-fe2e2753a-update.bin"
+      }
+    }
+  ]
 }
