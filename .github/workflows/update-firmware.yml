@@ -45,23 +45,26 @@ jobs:
           if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
             VERSION="${{ github.event.client_payload.version }}"
             SHORT_VERSION="${{ github.event.client_payload.short_version }}"
-            BASE_VERSION="${{ github.event.client_payload.base_version }}"
+            # BASE_VERSION aus VERSION ableiten (alles vor dem ersten Bindestrich nach der Versionsnummer)
+            BASE_VERSION=$(echo "$VERSION" | sed 's/-mh.*//')
+            BUILD_DATE="${{ github.event.client_payload.build_date }}"
             DISPLAY_VERSION="${{ github.event.client_payload.display_version }}"
             DOWNLOAD_BASE_URL="${{ github.event.client_payload.download_base_url }}"
             RELEASE_URL="${{ github.event.client_payload.release_url }}"
-            
-            # KORRIGIERT: Boards Array richtig extrahieren
             BOARDS_JSON='${{ toJson(github.event.client_payload.boards) }}'
             BOARDS=$(echo "$BOARDS_JSON" | jq -r '.[]' | tr '\n' ' ' | sed 's/ $//')
           else
+            # Manual workflow_dispatch bleibt unverändert
             VERSION="${{ github.event.inputs.version }}"
             SHORT_VERSION="$VERSION"
+            BASE_VERSION="$VERSION"  # Bei manueller Eingabe
             BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
             DOWNLOAD_BASE_URL="${{ github.event.inputs.download_base_url }}"
             BOARDS="${{ github.event.inputs.boards }}"
             RELEASE_URL="$DOWNLOAD_BASE_URL"
           fi
           
+          # Outputs setzen
           echo "base_version=$BASE_VERSION" >> $GITHUB_OUTPUT
           echo "display_version=$DISPLAY_VERSION" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
