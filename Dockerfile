@@ -1,8 +1,8 @@
 FROM nginx:alpine
 
 # Metadata
-LABEL version="firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260116-041755"
-LABEL build_date="2026-01-16T04:17:55Z"
+LABEL version="firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260117-041018"
+LABEL build_date="2026-01-17T04:10:18Z"
 LABEL description="Custom Meshtastic Firmware Backend"
 
 # Install additional tools for health checks
