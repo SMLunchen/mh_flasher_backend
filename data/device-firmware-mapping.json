@@ -1,6 +1,16 @@
 {
   "HELTEC_V3": [
     {
+      "id": "firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260221-045509",
+      "title": "Mesh Hessen Firmware firmware-0.4.91-mh-600a0df-20251104-155459-MH-dev für Heltec V3",
+      "page_url": "https://meshhessen.de",
+      "created_at": "2026-02-21T04:55:09Z",
+      "release_notes": "# Mesh Hessen Firmware firmware-0.4.91-mh-600a0df-20251104-155459-MH-dev\n\n**Build-Datum:** 2026-02-21  \n**Hardware:** Heltec V3  \n**Basis:** Meshtastic Firmware mit angepasster Konfiguration\n\n## Features\n- Optimiert für das Mesh Hessen Netzwerk\n- Angepasste Standard-Einstellungen\n- Automatische Updates über Web Flasher\n\n## Installation\nVerwende den \"Update\" Button für bestehende Installationen oder \"Clean Install\" für neue Geräte.\n\n[Mehr Infos](https://meshhessen.de/firmware)\n",
+      "bin_urls": {
+        "update": "https://flasher.schwarzes-seelenreich.de/backend/firmware/heltec-v3/firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260221-045509/firmware-heltec-v3-firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260221-045509-update.bin"
+      }
+    },
+    {
       "id": "firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260220-050539",
       "title": "Mesh Hessen Firmware firmware-0.4.91-mh-600a0df-20251104-155459-MH-dev für Heltec V3",
       "page_url": "https://meshhessen.de",
@@ -88,16 +98,6 @@
       "release_notes": "# Mesh Hessen Firmware firmware-0.4.91-mh-600a0df-20251104-155459-MH-dev\n\n**Build-Datum:** 2026-02-12  \n**Hardware:** Heltec V3  \n**Basis:** Meshtastic Firmware mit angepasster Konfiguration\n\n## Features\n- Optimiert für das Mesh Hessen Netzwerk\n- Angepasste Standard-Einstellungen\n- Automatische Updates über Web Flasher\n\n## Installation\nVerwende den \"Update\" Button für bestehende Installationen oder \"Clean Install\" für neue Geräte.\n\n[Mehr Infos](https://meshhessen.de/firmware)\n",
       "bin_urls": {
         "update": "https://flasher.schwarzes-seelenreich.de/backend/firmware/heltec-v3/firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260212-051637/firmware-heltec-v3-firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260212-051637-update.bin"
-      }
-    },
-    {
-      "id": "firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260211-052056",
-      "title": "Mesh Hessen Firmware firmware-0.4.91-mh-600a0df-20251104-155459-MH-dev für Heltec V3",
-      "page_url": "https://meshhessen.de",
-      "created_at": "2026-02-11T05:20:56Z",
-      "release_notes": "# Mesh Hessen Firmware firmware-0.4.91-mh-600a0df-20251104-155459-MH-dev\n\n**Build-Datum:** 2026-02-11  \n**Hardware:** Heltec V3  \n**Basis:** Meshtastic Firmware mit angepasster Konfiguration\n\n## Features\n- Optimiert für das Mesh Hessen Netzwerk\n- Angepasste Standard-Einstellungen\n- Automatische Updates über Web Flasher\n\n## Installation\nVerwende den \"Update\" Button für bestehende Installationen oder \"Clean Install\" für neue Geräte.\n\n[Mehr Infos](https://meshhessen.de/firmware)\n",
-      "bin_urls": {
-        "update": "https://flasher.schwarzes-seelenreich.de/backend/firmware/heltec-v3/firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260211-052056/firmware-heltec-v3-firmware-0.4.91-mh-600a0df-20251104-155459-mh-deeabe4-20260211-052056-update.bin"
       }
     }
   ],
